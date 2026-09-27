@@ -1,0 +1,12 @@
+{
+  "applinks": {
+    "details": [
+      {
+        "appIDs": ["88D4PZCQ3U.com.maximilon.townbelt-ios-55"],
+        "components": [
+          { "/": "/u/*", "comment": "Add-friend QR codes: https://townbelt.com/u/<user-id>" }
+        ]
+      }
+    ]
+  }
+}
