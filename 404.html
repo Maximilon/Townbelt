@@ -1,0 +1,18 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Townbelt</title>
+    <script>
+      // QR codes point at /u/<user-id>. With the app installed, iOS opens the
+      // app before this page ever loads. Without it, GitHub Pages serves this
+      // 404 page, so send the visitor to the home page's invite view (?u=<id>).
+      var m = location.pathname.match(/^\/u\/([0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12})/i);
+      location.replace(m ? '/?u=' + m[1] : '/');
+    </script>
+  </head>
+  <body>
+    <p><a href="/">Continue to Townbelt</a></p>
+  </body>
+</html>
