@@ -3,295 +3,551 @@
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
-    <title>Townbelt — Profile</title>
+    <title>Townbelt</title>
+    <meta name="description" content="Townbelt is an invite-only social network for you and your friends. Share what's happening in words and pictures, in real time. No ads. No algorithm. Now in beta on iPhone and Android." />
 
-    <!-- Link-preview tags. These are static; for per-profile unfurls you'd
-         render them server-side. Client JS can't change them after a crawler
-         reads the HTML. -->
-    <meta property="og:title" content="Join me on Townbelt" />
-    <meta property="og:description" content="Word of mouth friendship." />
-    <meta property="og:type" content="profile" />
+    <!-- Link-preview tags. Static: crawlers read them before any JS runs. -->
+    <meta property="og:title" content="Townbelt — Word of mouth friendship" />
+    <meta property="og:description" content="An invite-only social network for you and your friends. No ads. No algorithm. Now in beta on iPhone &amp; Android." />
+    <meta property="og:type" content="website" />
+    <meta property="og:url" content="https://townbelt.com/" />
+    <meta name="theme-color" content="#000000" />
+    <link rel="icon" href="favicon.svg" type="image/svg+xml" />
+    <link rel="icon" href="favicon-32.png" type="image/png" sizes="32x32" />
+    <link rel="apple-touch-icon" href="apple-touch-icon.png" />
+    <meta name="color-scheme" content="dark" />
 
     <style>
-      /* ----------------------------------------------------------------
-         Tokens lifted from src/constants/theme.ts so this matches the app.
-         ---------------------------------------------------------------- */
+      /* Brand greens from src/constants/theme.ts. The page sits on a darkened
+         night video, so text is light. */
       :root {
         --brand-primary: #2e7d32;
-
-        /* light scheme */
-        --text: #000000;
-        --text-secondary: #6c6c70;
-        --card-bg: #ffffff;
-        --elevated: #ffffff; /* avatar ring + online-dot border */
-        --skeleton: #d9dee7;
-        --screen-gradient: linear-gradient(180deg, #eef3ff 0%, #f2eeff 100%);
-        --banner-gradient: linear-gradient(135deg, #2e7d32 0%, #4ca84f 55%, #a6d6a8 100%);
-        --card-shadow: 0 18px 50px rgba(20, 30, 60, 0.16);
-      }
-
-      @media (prefers-color-scheme: dark) {
-        :root {
-          --text: #ffffff;
-          --text-secondary: #98989f;
-          --card-bg: #1c1c1e;
-          --elevated: #1c1c1e;
-          --skeleton: #22232a;
-          --screen-gradient: linear-gradient(180deg, #0d0d14 0%, #0f0f1e 100%);
-          --banner-gradient: linear-gradient(135deg, #143b17 0%, #1f5c2a 50%, #2e7d32 100%);
-          --card-shadow: 0 18px 50px rgba(0, 0, 0, 0.55);
-        }
+        --brand-primary-light: #4ca84f;
+        --brand-tint: #c8e6c9;
+        --text: #ffffff;
+        --text-secondary: rgba(255, 255, 255, 0.8);
+        --bg: #000000;
+        --divider: rgba(255, 255, 255, 0.25);
       }
 
       * {
         box-sizing: border-box;
       }
 
-      html,
       body {
-        height: 100%;
         margin: 0;
-      }
-
-      body {
-        font-family: -apple-system, BlinkMacSystemFont, "SF Pro Rounded",
-          "SF Pro Text", system-ui, "Segoe UI", Roboto, Helvetica, Arial,
-          sans-serif;
-        background: var(--screen-gradient);
+        font-family: -apple-system, BlinkMacSystemFont, "SF Pro Text", system-ui,
+          "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+        background: var(--bg);
         color: var(--text);
-        display: flex;
-        flex-direction: column;
-        align-items: center;
-        justify-content: center;
-        gap: 20px;
-        padding: 24px;
-        min-height: 100dvh;
         -webkit-font-smoothing: antialiased;
         text-rendering: optimizeLegibility;
       }
 
-      /* The hero card ------------------------------------------------- */
-      .card {
+      .rounded {
+        font-family: ui-rounded, "SF Pro Rounded", -apple-system, system-ui,
+          "Segoe UI", Roboto, sans-serif;
+      }
+
+      /* Background video under a dark wash, so the white type stays legible. */
+      .bg-video,
+      .bg-wash {
+        position: fixed;
+        inset: 0;
         width: 100%;
-        max-width: 360px;
-        background: var(--card-bg);
-        border-radius: 24px;
-        overflow: hidden;
-        box-shadow: var(--card-shadow);
+        height: 100%;
+        z-index: 0;
+      }
+      .bg-video {
+        object-fit: cover;
+      }
+      .bg-wash {
+        background: linear-gradient(
+          180deg,
+          rgba(0, 0, 0, 0.55) 0%,
+          rgba(0, 0, 0, 0.45) 50%,
+          rgba(0, 0, 0, 0.65) 100%
+        );
+      }
+
+      /* One screen: header, centred hero, footer pinned to the bottom. */
+      .page {
+        position: relative;
+        z-index: 1;
+        max-width: 1040px;
+        min-height: 100dvh;
+        margin: 0 auto;
+        padding: 0 24px;
+        display: flex;
+        flex-direction: column;
+      }
+
+      header {
+        padding: max(24px, env(safe-area-inset-top)) 0 0;
+      }
+
+      .wordmark {
+        font-size: 24px;
+        font-weight: 700;
+        letter-spacing: -0.5px;
+        color: var(--text);
+        text-decoration: none;
+      }
+
+      main {
+        flex: 1;
         display: flex;
         flex-direction: column;
         align-items: center;
-        padding-bottom: 24px;
+        justify-content: center;
+        text-align: center;
+        padding: 72px 0;
       }
 
-      .banner {
-        width: 100%;
-        height: 140px;
-        background: var(--banner-gradient);
-        background-size: cover;
-        background-position: center;
+      /* Shown for /?u=<id> links (QR codes, via 404.html). */
+      .invite {
+        display: none;
+        align-items: center;
+        gap: 10px;
+        margin: 0 0 32px;
+        padding: 6px 16px 6px 6px;
+        border-radius: 999px;
+        border: 1px solid var(--divider);
+        font-size: 15px;
       }
-
-      .avatar-wrap {
-        position: relative;
-        margin-top: -42px;
-        margin-bottom: 4px;
+      .invite.show {
+        display: inline-flex;
       }
-
-      .avatar {
-        width: 84px;
-        height: 84px;
+      .invite .avatar {
+        width: 32px;
+        height: 32px;
         border-radius: 50%;
-        border: 4px solid var(--elevated);
         background: linear-gradient(135deg, #4ca84f 0%, #2e7d32 100%);
+        color: #ffffff;
+        font-size: 13px;
+        font-weight: 600;
         display: flex;
         align-items: center;
         justify-content: center;
-        color: #ffffff;
-        font-size: 32px;
-        font-weight: 600;
-        letter-spacing: -0.5px;
         overflow: hidden;
+        flex-shrink: 0;
       }
-
-      .avatar img {
+      .invite .avatar img {
         width: 100%;
         height: 100%;
         object-fit: cover;
       }
 
-      .online-dot {
-        position: absolute;
-        bottom: 2px;
-        right: 2px;
-        width: 16px;
-        height: 16px;
-        border-radius: 50%;
-        background: var(--brand-primary);
-        border: 3px solid var(--elevated);
-      }
-
-      .name {
-        font-size: 24px;
-        font-weight: 700;
-        letter-spacing: -0.5px;
-        margin: 2px 0 0;
-        padding: 0 24px;
-        text-align: center;
-      }
-
-      .bio {
-        font-size: 14px;
-        line-height: 20px;
-        color: var(--text-secondary);
-        text-align: center;
-        padding: 4px 24px 0;
+      h1 {
         margin: 0;
-        min-height: 0;
-      }
-
-      .invite-btn {
-        margin-top: 14px;
-        display: inline-flex;
-        align-items: center;
-        gap: 6px;
-        background: var(--brand-primary);
-        color: #ffffff;
-        font-size: 15px;
-        font-weight: 600;
-        padding: 10px 24px;
-        border-radius: 22px;
-        border: none;
-        text-decoration: none;
-        cursor: pointer;
-        transition: opacity 0.15s ease, transform 0.05s ease;
-      }
-
-      .invite-btn:hover {
-        opacity: 0.92;
-      }
-      .invite-btn:active {
-        transform: scale(0.98);
-      }
-      .invite-btn svg {
-        width: 16px;
-        height: 16px;
-        fill: #ffffff;
-      }
-
-      /* Loading shimmer while the profile resolves -------------------- */
-      .card.loading .banner {
-        background: var(--skeleton);
-      }
-      .card.loading .avatar {
-        background: var(--skeleton);
-      }
-      .card.loading .name,
-      .card.loading .bio {
-        color: transparent;
-        background: var(--skeleton);
-        border-radius: 8px;
-        margin-inline: 24px;
-        min-width: 120px;
-      }
-      /* Accept stays inert until the profile has resolved. */
-      .card.loading .invite-btn {
-        pointer-events: none;
-        opacity: 0.5;
-      }
-
-      /* Footer: copyright + legal ------------------------------------- */
-      .legal {
-        font-size: 12px;
-        line-height: 18px;
-        color: var(--text-secondary);
-        text-align: center;
-        max-width: 360px;
-      }
-      .legal a {
-        color: var(--text-secondary);
-        text-decoration: none;
-        border-bottom: 1px solid currentColor;
-        padding-bottom: 1px;
-      }
-      .legal a:hover {
+        font-size: clamp(56px, 11vw, 120px);
+        line-height: 1;
+        letter-spacing: -0.035em;
+        font-weight: 700;
         color: var(--text);
       }
-      .legal .sep {
-        opacity: 0.5;
-        margin: 0 6px;
+
+      .tagline {
+        margin: 40px 0 0;
+        max-width: 540px;
+        font-size: clamp(17px, 2.2vw, 19px);
+        line-height: 1.5;
+        color: var(--text-secondary);
+        /* Keeps the small text readable over the brighter city lights. */
+        text-shadow: 0 1px 12px rgba(0, 0, 0, 0.7);
+      }
+
+      .beta-pill {
+        margin: 48px 0 16px;
+        padding: 6px 16px;
+        border-radius: 999px;
+        background: rgba(76, 168, 79, 0.3);
+        color: var(--brand-tint);
+        font-size: 14px;
+        font-weight: 600;
+      }
+
+      /* Store badges ---------------------------------------------------
+         <html data-platform> is set by the script below. Phones see only
+         their own store; computers (or "show both") see both. */
+      .badges {
+        display: flex;
+        flex-wrap: wrap;
+        justify-content: center;
+        gap: 12px;
+      }
+
+      .badge {
+        display: inline-flex;
+        align-items: center;
+        gap: 10px;
+        height: 56px;
+        min-width: 190px;
+        padding: 0 20px 0 16px;
+        background: #000000;
+        color: #ffffff;
+        border: 1px solid #a6a6a6;
+        border-radius: 12px;
+        text-decoration: none;
+        transition: transform 0.05s ease, opacity 0.15s ease;
+      }
+      .badge:hover {
+        opacity: 0.88;
+      }
+      .badge:active {
+        transform: scale(0.98);
+      }
+      .badge svg {
+        width: 28px;
+        height: 28px;
+        flex-shrink: 0;
+      }
+      .badge .apple {
+        fill: #ffffff;
+      }
+      .badge span {
+        display: flex;
+        flex-direction: column;
+        text-align: left;
+        line-height: 1.05;
+      }
+      .badge small {
+        font-size: 11px;
+        font-weight: 500;
+        letter-spacing: 0.02em;
+      }
+      .badge b {
+        font-size: 22px;
+        font-weight: 600;
+        letter-spacing: -0.3px;
+      }
+
+      html[data-platform="ios"] .badge.android,
+      html[data-platform="android"] .badge.ios {
+        display: none;
+      }
+
+      .phone-switch {
+        display: none;
+        margin: 16px 0 0;
+        font-size: 13px;
+        color: var(--text-secondary);
+      }
+      html[data-platform="ios"] .phone-switch,
+      html[data-platform="android"] .phone-switch {
+        display: block;
+      }
+      .phone-switch button {
+        font: inherit;
+        color: var(--brand-tint);
+        background: none;
+        border: none;
+        padding: 0;
+        cursor: pointer;
+        text-decoration: underline;
+        text-underline-offset: 3px;
+      }
+
+      footer {
+        padding: 0 0 max(24px, env(safe-area-inset-bottom));
+        text-align: center;
+        font-size: 13px;
+        color: var(--text-secondary);
+      }
+      footer a {
+        color: var(--text-secondary);
+        text-decoration: none;
+      }
+      footer a:hover {
+        color: var(--text);
+      }
+
+      /* Privacy sheet -------------------------------------------------
+         Mirrors the app's sheets: X on the left, centred title. */
+      html:has(.sheet[open]) {
+        overflow: hidden;
+      }
+      .sheet {
+        width: min(640px, calc(100% - 32px));
+        max-height: min(85dvh, 760px);
+        padding: 0;
+        border: none;
+        border-radius: 20px;
+        background: #1c1c1e;
+        color: var(--text);
+        box-shadow: 0 24px 80px rgba(0, 0, 0, 0.6);
+      }
+      .sheet[open] {
+        display: flex;
+        flex-direction: column;
+      }
+      .sheet::backdrop {
+        background: rgba(0, 0, 0, 0.6);
+        backdrop-filter: blur(6px);
+        -webkit-backdrop-filter: blur(6px);
+      }
+      .sheet-header {
+        display: grid;
+        grid-template-columns: 44px 1fr 44px;
+        align-items: center;
+        padding: 10px 12px;
+        border-bottom: 1px solid var(--divider);
+      }
+      .sheet-header h2 {
+        margin: 0;
+        text-align: center;
+        font-size: 17px;
+        font-weight: 600;
+      }
+      .sheet-close {
+        width: 32px;
+        height: 32px;
+        border: none;
+        border-radius: 50%;
+        background: rgba(255, 255, 255, 0.12);
+        color: var(--text);
+        cursor: pointer;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+      }
+      .sheet-close svg {
+        width: 12px;
+        height: 12px;
+        stroke: currentColor;
+        stroke-width: 2.5;
+        stroke-linecap: round;
+      }
+      .sheet-body {
+        overflow-y: auto;
+        padding: 20px 24px 32px;
+        font-size: 15px;
+        line-height: 1.55;
+        color: var(--text-secondary);
+      }
+      .sheet-body h3 {
+        margin: 24px 0 6px;
+        font-size: 16px;
+        color: var(--text);
+      }
+      .sheet-body p,
+      .sheet-body ul {
+        margin: 0 0 10px;
+      }
+      .sheet-body ul {
+        padding-left: 20px;
+      }
+      .sheet-body li {
+        margin-bottom: 6px;
+      }
+      .sheet-body b {
+        color: var(--text);
+        font-weight: 600;
+      }
+      .sheet-body a {
+        color: var(--brand-tint);
+      }
+      .sheet-body .updated {
+        font-size: 13px;
+      }
+
+      @media (max-width: 720px) {
+        main {
+          padding: 56px 0;
+        }
+        .tagline {
+          margin-top: 28px;
+        }
+        .beta-pill {
+          margin-top: 36px;
+        }
       }
     </style>
   </head>
 
   <body>
-    <main class="card loading" id="card">
-      <div class="banner" id="banner"></div>
+    <!-- "Silhouettes of Two People Against a Cityscape" from Mixkit (Mixkit
+         Stock Video Free License: commercial use, no attribution needed).
+         The script below adds the src, so reduced-motion visitors get the poster only. -->
+    <video class="bg-video" muted loop playsinline aria-hidden="true" poster="media/city.jpg"></video>
+    <div class="bg-wash"></div>
 
-      <div class="avatar-wrap">
-        <div class="avatar" id="avatar"></div>
-        <span class="online-dot"></span>
+    <div class="page">
+      <header>
+        <a class="wordmark rounded" href="/">Townbelt</a>
+      </header>
+
+      <main>
+        <div class="invite" id="invite">
+          <div class="avatar" id="invite-avatar"></div>
+          <span id="invite-text"></span>
+        </div>
+
+        <h1 class="rounded">Word of mouth<br />friendship.</h1>
+
+        <p class="tagline">
+          Townbelt is an invite-only social network for you and your friends. Share what's
+          happening in words and pictures, in&nbsp;real&nbsp;time. No ads. No algorithm.
+        </p>
+
+        <div class="beta-pill">Now in beta on iPhone &amp; Android</div>
+
+        <div class="badges">
+          <a class="badge ios" data-store="ios" href="#" aria-label="Join the iPhone beta on TestFlight">
+            <svg viewBox="0 0 24 24" aria-hidden="true">
+              <path class="apple" d="M16.37 12.6c-.02-2.2 1.8-3.26 1.88-3.31-1.03-1.5-2.63-1.7-3.19-1.73-1.36-.14-2.65.8-3.34.8-.69 0-1.75-.78-2.88-.76-1.48.02-2.85.86-3.61 2.19-1.54 2.67-.39 6.62 1.11 8.79.73 1.06 1.6 2.25 2.75 2.21 1.1-.04 1.52-.71 2.85-.71 1.33 0 1.71.71 2.88.69 1.19-.02 1.94-1.08 2.67-2.15.84-1.23 1.19-2.42 1.21-2.48-.03-.01-2.32-.89-2.34-3.53zM14.17 6.13c.61-.74 1.02-1.76.91-2.78-.88.04-1.94.59-2.57 1.32-.56.65-1.06 1.69-.93 2.69.98.08 1.98-.5 2.59-1.23z" />
+            </svg>
+            <span><small>Join the beta on</small><b>TestFlight</b></span>
+          </a>
+          <a class="badge android" data-store="android" href="#" aria-label="Get the Android beta on Google Play">
+            <svg viewBox="0 0 24 24" aria-hidden="true">
+              <path fill="#00d7fe" d="M3.6 2.3 13.4 12l-9.8 9.7c-.4-.2-.6-.6-.6-1.1V3.4c0-.5.2-.9.6-1.1z" />
+              <path fill="#ffce00" d="M16.8 15.4 13.4 12l3.4-3.4 4 2.3c1.1.6 1.1 1.7 0 2.3z" />
+              <path fill="#ff3a44" d="M16.8 15.4 13.4 12l-9.8 9.7c.4.2.9.2 1.4-.1z" />
+              <path fill="#00f076" d="M16.8 8.6 5 1.9c-.5-.3-1-.3-1.4-.1l9.8 10.2z" />
+            </svg>
+            <span><small>GET THE BETA ON</small><b>Google Play</b></span>
+          </a>
+        </div>
+
+        <p class="phone-switch">Different phone? <button type="button" id="show-all">Show both</button></p>
+      </main>
+
+      <footer>
+        <span id="copyright">© Townbelt</span> · <a href="privacy.html" id="privacy-link">Privacy</a>
+      </footer>
+    </div>
+
+    <!-- Same text as privacy.html and the in-app policy (src/app/settings/legal.tsx). Keep all three in sync. -->
+    <dialog class="sheet" id="privacy" aria-labelledby="privacy-title">
+      <div class="sheet-header">
+        <button type="button" class="sheet-close" id="privacy-close" aria-label="Close">
+          <svg viewBox="0 0 12 12" aria-hidden="true"><path d="M1 1l10 10M11 1 1 11" /></svg>
+        </button>
+        <h2 id="privacy-title">Privacy Policy</h2>
       </div>
+      <div class="sheet-body">
+        <p class="updated">Last updated: October 23, 2026</p>
+        <p>Townbelt is built around real friendships, and that starts with being straightforward about what we collect and why.</p>
 
-      <h1 class="name" id="name">Loading</h1>
-      <p class="bio" id="bio"></p>
+        <h3>1. Information we collect</h3>
+        <ul>
+          <li><b>Phone number</b> — used to sign you in via a one-time code, and to help friends who already have you in their contacts find you. It's never shown publicly as an editable profile field.</li>
+          <li><b>Profile info</b> — your name, profile photo, banner, and bio, all of which you control from Settings.</li>
+          <li><b>Contacts (optional)</b> — with your permission, we check your phone contacts against existing Townbelt users so we can show you people you may already know. Contact data is matched on-device against phone numbers; we don't upload or store your full contact list on our servers.</li>
+          <li><b>Posts and photos</b> — the text, photos, tags, and locations you choose to include in a post, along with who you shared it with.</li>
+          <li><b>Friend and introduction activity</b> — friend requests, introductions, mutes, and removals, so the app can show the right relationships and notifications.</li>
+          <li><b>Device push token</b> — so we can deliver notifications (likes, comments, friend requests, introductions) to your device. You can turn notifications off in Settings at any time.</li>
+          <li><b>Basic technical data</b> — things like app version and error logs, used only to keep the app working.</li>
+        </ul>
 
-      <a class="invite-btn" id="cta" href="#">
-        <svg viewBox="0 0 24 24" aria-hidden="true">
-          <path
-            d="M9 11.5a4 4 0 1 0 0-8 4 4 0 0 0 0 8Zm0 1.5c-3.6 0-7 1.9-7 4.4 0 .9.7 1.6 1.6 1.6h9.2c-.2-.5-.3-1-.3-1.6 0-1.7.7-3.2 1.9-4.2A11.6 11.6 0 0 0 9 13Zm10 1.2c.5 0 .9.4.9.9v2h2c.5 0 .9.4.9.9s-.4.9-.9.9h-2v2c0 .5-.4.9-.9.9s-.9-.4-.9-.9v-2h-2c-.5 0-.9-.4-.9-.9s.4-.9.9-.9h2v-2c0-.5.4-.9.9-.9Z"
-          />
-        </svg>
-        <span id="cta-label">Get Townbelt</span>
-      </a>
-    </main>
+        <h3>2. How we use it</h3>
+        <p>We use this information to run Townbelt: authenticate you, show your feed and friends, deliver notifications, and let you manage your profile and content. We do not use your data for advertising, and we do not build ad profiles.</p>
 
-    <footer class="legal">
-      <span id="copyright">© Townbelt</span>
-      <span class="sep">·</span>
-      <a href="/privacy">Privacy</a>
-    </footer>
+        <h3>3. What we share</h3>
+        <p>We never sell your data. Your posts and profile are visible only to the audience you choose (your friends, or a smaller group for a specific post) — Townbelt has no public feed. We use trusted infrastructure providers (including Supabase for data storage and Apple and Google for push notification delivery) to operate the app; they process data on our behalf and don't use it for their own purposes.</p>
+
+        <h3>4. Data retention and deletion</h3>
+        <p>You can permanently delete your account at any time from Settings → Delete Account. This immediately and permanently removes your profile, posts, comments, friendships, notifications, and stored photos — there's no recovery period, so it can't be undone. If you'd like a copy of your data or have another data request, email us and we'll help.</p>
+
+        <h3>5. Children's privacy</h3>
+        <p>Townbelt is not directed at children under 13, and we don't knowingly collect data from anyone under that age. If you believe a child has created an account, contact us and we'll remove it.</p>
+
+        <h3>6. Security</h3>
+        <p>We use industry-standard measures (encrypted connections, access controls, row-level database security) to protect your data, but no system is 100% secure — please use a device passcode and keep your phone secure.</p>
+
+        <h3>7. Your choices</h3>
+        <p>You can edit or remove your profile information at any time, control notification preferences in Settings, and permanently delete your account and all associated data whenever you choose.</p>
+
+        <h3>8. Changes to this policy</h3>
+        <p>We may update this policy as Townbelt changes. We'll update the date above when we do.</p>
+
+        <h3>9. Contact</h3>
+        <p>Questions, data requests, or concerns: <a href="mailto:max@townbelt.com">max@townbelt.com</a>.</p>
+      </div>
+    </dialog>
 
     <script>
       // ================================================================
-      // CONFIG — edit these three when you deploy.
-      // The anon "publishable" key is safe to ship in client code; it only
-      // grants whatever your RLS policies allow. See the RLS note below.
+      // CONFIG
       // ================================================================
-      const SUPABASE_URL = "https://cskhaxtuuygkywygjcqw.supabase.co";
-      const SUPABASE_ANON_KEY =
-        "sb_publishable_lm5g9KF8BRjvVoD81nbkeQ_p8BUtTVP";
-
-      // Where "Get Townbelt" sends people. Swap for your App Store / TestFlight
-      // URL. The invited user's id is appended as ?ref= so you can attribute
-      // later if you add deferred deep linking.
-      const APP_LINK = "https://testflight.apple.com/join/sPRS5PNz"
-
-      // Reads come through the get_public_profile(id) RPC (migration 0014).
-      // It returns only the safe columns for a single id — anon has no table
-      // access and can't enumerate the user list. phone/email never leave the
-      // database.
-
-      const params = new URLSearchParams(location.search);
-      // Accept either a pretty path (/p/<uuid>) or a query param (?u=<uuid>).
-      // The path segment only counts if it looks like a UUID, so serving the
-      // file at /profile-card.html still falls through to ?u=.
-      const lastSeg = location.pathname.split("/").filter(Boolean).pop() || "";
-      const pathId = /^[0-9a-f-]{36}$/i.test(lastSeg) ? lastSeg : null;
-      const userId = params.get("u") || pathId;
-
-      const els = {
-        card: document.getElementById("card"),
-        banner: document.getElementById("banner"),
-        avatar: document.getElementById("avatar"),
-        name: document.getElementById("name"),
-        bio: document.getElementById("bio"),
-        cta: document.getElementById("cta"),
-        ctaLabel: document.getElementById("cta-label"),
-        copyright: document.getElementById("copyright"),
+      const LINKS = {
+        ios: "https://testflight.apple.com/join/sPRS5PNz",
+        // Play "open testing" opt-in page for the townbelt.android package.
+        // Only works once an open (or public closed) testing track is live.
+        android: "https://play.google.com/apps/testing/townbelt.android",
       };
 
-      els.copyright.textContent = "© " + new Date().getFullYear() + " Townbelt";
+      // The anon "publishable" key is safe in client code; reads go through
+      // the get_public_profile(id) RPC, which returns only safe columns.
+      const SUPABASE_URL = "https://cskhaxtuuygkywygjcqw.supabase.co";
+      const SUPABASE_ANON_KEY = "sb_publishable_lm5g9KF8BRjvVoD81nbkeQ_p8BUtTVP";
+
+      // ---- Platform: show the store that matches this phone -------------
+      function detectPlatform() {
+        const ua = navigator.userAgent;
+        if (/android/i.test(ua)) return "android";
+        if (/iPhone|iPad|iPod/.test(ua)) return "ios";
+        // iPadOS reports a Mac user agent; touch support gives it away.
+        if (/Macintosh/.test(ua) && navigator.maxTouchPoints > 1) return "ios";
+        return "desktop";
+      }
+
+      const platform = detectPlatform();
+      const root = document.documentElement;
+      root.dataset.platform = platform;
+
+      document.getElementById("show-all").addEventListener("click", () => {
+        root.dataset.platform = "desktop";
+      });
+
+      // ---- Background video: skipped for reduced motion or data saver, so
+      // those visitors only download the poster frame.
+      const stillOnly =
+        matchMedia("(prefers-reduced-motion: reduce)").matches || navigator.connection?.saveData;
+      if (!stillOnly) {
+        const video = document.querySelector(".bg-video");
+        video.src = "media/city.mp4";
+        // Autoplay can be refused (e.g. iOS Low Power Mode); the poster stays.
+        video.play().catch(() => {});
+      }
+
+      // ---- Privacy sheet: opens from the footer link or a #privacy URL ----
+      const privacy = document.getElementById("privacy");
+
+      function openPrivacy() {
+        if (!privacy.open) privacy.showModal();
+        history.replaceState(null, "", location.pathname + location.search + "#privacy");
+      }
+
+      privacy.addEventListener("close", () => {
+        history.replaceState(null, "", location.pathname + location.search);
+      });
+      // A click that lands on the dialog itself is a click on the backdrop.
+      privacy.addEventListener("click", (e) => {
+        if (e.target === privacy) privacy.close();
+      });
+      document.getElementById("privacy-close").addEventListener("click", () => privacy.close());
+      document.getElementById("privacy-link").addEventListener("click", (e) => {
+        e.preventDefault();
+        openPrivacy();
+      });
+      if (location.hash === "#privacy") openPrivacy();
+
+      // ---- Invite links: /?u=<uuid> --------------------------------------
+      const params = new URLSearchParams(location.search);
+      const inviterId = params.get("u");
+      const isUuid = (s) => /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i.test(s || "");
+      const refId = isUuid(inviterId) ? inviterId : null;
+
+      function storeLink(store) {
+        // TestFlight ignores ?ref=, but it's kept for future attribution.
+        return LINKS[store] + (refId && store === "ios" ? "?ref=" + encodeURIComponent(refId) : "");
+      }
+
+      document.querySelectorAll("[data-store]").forEach((a) => {
+        a.href = storeLink(a.dataset.store);
+      });
 
       function initials(fullName) {
         const parts = (fullName || "").trim().split(/\s+/).filter(Boolean);
@@ -299,91 +555,50 @@
         return (parts[0][0] + (parts[1]?.[0] || "")).toUpperCase();
       }
 
-      function render(profile, ctaLabel = "Accept friend request") {
-        const fullName = profile.full_name || profile.name || "Someone";
-
-        document.title = fullName + " — Townbelt";
-        els.name.textContent = fullName;
-
-        if (profile.bio) {
-          els.bio.textContent = profile.bio;
-        } else {
-          els.bio.remove();
-        }
-
+      function showInvite(profile) {
+        const fullName = profile.full_name || profile.name;
+        if (!fullName) return;
+        const firstName = fullName.trim().split(/\s+/)[0];
+        const avatar = document.getElementById("invite-avatar");
         if (profile.avatar_url) {
           const img = document.createElement("img");
           img.src = profile.avatar_url;
-          img.alt = fullName;
-          els.avatar.replaceChildren(img);
+          img.alt = "";
+          avatar.replaceChildren(img);
         } else {
-          els.avatar.textContent = initials(fullName);
+          avatar.textContent = initials(fullName);
         }
-
-        if (profile.banner_url) {
-          els.banner.style.backgroundImage = "url('" + profile.banner_url + "')";
-        }
-
-        els.ctaLabel.textContent = ctaLabel;
-        els.cta.href =
-          APP_LINK + (profile.id ? "?ref=" + encodeURIComponent(profile.id) : "");
-
-        els.card.classList.remove("loading");
+        const b = document.createElement("b");
+        b.textContent = firstName;
+        document.getElementById("invite-text").replaceChildren(b, " invited you to Townbelt");
+        document.getElementById("invite").classList.add("show");
+        document.title = firstName + " invited you to Townbelt";
       }
 
-      // Fallback when there's no ?u= or the fetch fails. A ?name=…&bio=… query
-      // still renders that (handy for design tests); otherwise we brand the
-      // card as Townbelt itself so the link always lands somewhere coherent.
-      function renderFromParams() {
-        const name = params.get("name");
-        if (name) {
-          render({
-            id: userId || "",
-            full_name: name,
-            name: name,
-            bio: params.get("bio"),
-            avatar_url: params.get("avatar"),
-            banner_url: params.get("banner"),
-          });
-        } else {
-          render(
-            {
-              id: "",
-              full_name: "Townbelt",
-              name: "Townbelt",
-              bio: "Word of mouth friendship.",
-            },
-            "Join Townbelt",
-          );
-        }
-      }
-
-      async function load() {
-        if (!userId) return renderFromParams();
+      async function loadInviter() {
+        if (!refId) return;
         try {
-          const res = await fetch(
-            SUPABASE_URL + "/rest/v1/rpc/get_public_profile",
-            {
-              method: "POST",
-              headers: {
-                apikey: SUPABASE_ANON_KEY,
-                Authorization: "Bearer " + SUPABASE_ANON_KEY,
-                "Content-Type": "application/json",
-              },
-              body: JSON.stringify({ profile_id: userId }),
+          const res = await fetch(SUPABASE_URL + "/rest/v1/rpc/get_public_profile", {
+            method: "POST",
+            headers: {
+              apikey: SUPABASE_ANON_KEY,
+              Authorization: "Bearer " + SUPABASE_ANON_KEY,
+              "Content-Type": "application/json",
             },
-          );
+            body: JSON.stringify({ profile_id: refId }),
+          });
           if (!res.ok) throw new Error("HTTP " + res.status);
           const rows = await res.json();
-          if (rows && rows.length) return render(rows[0]);
-          renderFromParams(); // unknown id → generic card
+          if (rows && rows.length) showInvite(rows[0]);
         } catch (err) {
-          console.error("Profile fetch failed:", err);
-          renderFromParams();
+          // Unknown id or network trouble: the plain landing page still works.
+          console.error("Inviter fetch failed:", err);
         }
       }
 
-      load();
+      loadInviter();
+
+      document.getElementById("copyright").textContent = "© " + new Date().getFullYear() + " Townbelt";
     </script>
   </body>
 </html>

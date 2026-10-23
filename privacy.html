@@ -1,0 +1,136 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+    <title>Privacy Policy — Townbelt</title>
+    <meta name="description" content="How Townbelt collects, uses and protects your information." />
+    <link rel="icon" href="favicon.svg" type="image/svg+xml" />
+    <link rel="icon" href="favicon-32.png" type="image/png" sizes="32x32" />
+    <link rel="apple-touch-icon" href="apple-touch-icon.png" />
+    <meta name="color-scheme" content="dark" />
+
+    <!-- Same text as the #privacy sheet in index.html and the in-app policy
+         (src/app/settings/legal.tsx). Keep all three in sync. -->
+    <style>
+      :root {
+        --brand-tint: #c8e6c9;
+        --text: #ffffff;
+        --text-secondary: rgba(255, 255, 255, 0.8);
+        --bg: #000000;
+        --divider: rgba(255, 255, 255, 0.25);
+      }
+
+      * {
+        box-sizing: border-box;
+      }
+
+      body {
+        margin: 0;
+        font-family: -apple-system, BlinkMacSystemFont, "SF Pro Text", system-ui,
+          "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+        background: var(--bg);
+        color: var(--text);
+        -webkit-font-smoothing: antialiased;
+        text-rendering: optimizeLegibility;
+      }
+
+      main {
+        max-width: 640px;
+        margin: 0 auto;
+        padding: 48px 16px 64px;
+      }
+      .home {
+        color: var(--text-secondary);
+        text-decoration: none;
+        font-size: 15px;
+      }
+      .home:hover {
+        color: var(--text);
+      }
+      h1 {
+        margin: 24px 0 8px;
+        font-family: ui-rounded, "SF Pro Rounded", -apple-system, system-ui,
+          "Segoe UI", Roboto, sans-serif;
+        font-size: 32px;
+        font-weight: 700;
+      }
+
+      .sheet-body {
+        font-size: 15px;
+        line-height: 1.55;
+        color: var(--text-secondary);
+      }
+      .sheet-body h3 {
+        margin: 24px 0 6px;
+        font-size: 16px;
+        color: var(--text);
+      }
+      .sheet-body p,
+      .sheet-body ul {
+        margin: 0 0 10px;
+      }
+      .sheet-body ul {
+        padding-left: 20px;
+      }
+      .sheet-body li {
+        margin-bottom: 6px;
+      }
+      .sheet-body b {
+        color: var(--text);
+        font-weight: 600;
+      }
+      .sheet-body a {
+        color: var(--brand-tint);
+      }
+      .sheet-body .updated {
+        font-size: 13px;
+      }
+    </style>
+  </head>
+  <body>
+    <main>
+      <a class="home" href="./">‹ Townbelt</a>
+      <h1>Privacy Policy</h1>
+      <div class="sheet-body">
+        <p class="updated">Last updated: October 23, 2026</p>
+        <p>Townbelt is built around real friendships, and that starts with being straightforward about what we collect and why.</p>
+
+        <h3>1. Information we collect</h3>
+        <ul>
+          <li><b>Phone number</b> — used to sign you in via a one-time code, and to help friends who already have you in their contacts find you. It's never shown publicly as an editable profile field.</li>
+          <li><b>Profile info</b> — your name, profile photo, banner, and bio, all of which you control from Settings.</li>
+          <li><b>Contacts (optional)</b> — with your permission, we check your phone contacts against existing Townbelt users so we can show you people you may already know. Contact data is matched on-device against phone numbers; we don't upload or store your full contact list on our servers.</li>
+          <li><b>Posts and photos</b> — the text, photos, tags, and locations you choose to include in a post, along with who you shared it with.</li>
+          <li><b>Friend and introduction activity</b> — friend requests, introductions, mutes, and removals, so the app can show the right relationships and notifications.</li>
+          <li><b>Device push token</b> — so we can deliver notifications (likes, comments, friend requests, introductions) to your device. You can turn notifications off in Settings at any time.</li>
+          <li><b>Basic technical data</b> — things like app version and error logs, used only to keep the app working.</li>
+        </ul>
+
+        <h3>2. How we use it</h3>
+        <p>We use this information to run Townbelt: authenticate you, show your feed and friends, deliver notifications, and let you manage your profile and content. We do not use your data for advertising, and we do not build ad profiles.</p>
+
+        <h3>3. What we share</h3>
+        <p>We never sell your data. Your posts and profile are visible only to the audience you choose (your friends, or a smaller group for a specific post) — Townbelt has no public feed. We use trusted infrastructure providers (including Supabase for data storage and Apple and Google for push notification delivery) to operate the app; they process data on our behalf and don't use it for their own purposes.</p>
+
+        <h3>4. Data retention and deletion</h3>
+        <p>You can permanently delete your account at any time from Settings → Delete Account. This immediately and permanently removes your profile, posts, comments, friendships, notifications, and stored photos — there's no recovery period, so it can't be undone. If you'd like a copy of your data or have another data request, email us and we'll help.</p>
+
+        <h3>5. Children's privacy</h3>
+        <p>Townbelt is not directed at children under 13, and we don't knowingly collect data from anyone under that age. If you believe a child has created an account, contact us and we'll remove it.</p>
+
+        <h3>6. Security</h3>
+        <p>We use industry-standard measures (encrypted connections, access controls, row-level database security) to protect your data, but no system is 100% secure — please use a device passcode and keep your phone secure.</p>
+
+        <h3>7. Your choices</h3>
+        <p>You can edit or remove your profile information at any time, control notification preferences in Settings, and permanently delete your account and all associated data whenever you choose.</p>
+
+        <h3>8. Changes to this policy</h3>
+        <p>We may update this policy as Townbelt changes. We'll update the date above when we do.</p>
+
+        <h3>9. Contact</h3>
+        <p>Questions, data requests, or concerns: <a href="mailto:max@townbelt.com">max@townbelt.com</a>.</p>
+      </div>
+    </main>
+  </body>
+</html>
