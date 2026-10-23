@@ -11,23 +11,22 @@
     <meta property="og:description" content="An invite-only social network for you and your friends. No ads. No algorithm. Now in beta on iPhone &amp; Android." />
     <meta property="og:type" content="website" />
     <meta property="og:url" content="https://townbelt.com/" />
-    <meta name="theme-color" content="#000000" />
+    <meta name="theme-color" content="#fafaf6" />
     <link rel="icon" href="favicon.svg" type="image/svg+xml" />
     <link rel="icon" href="favicon-32.png" type="image/png" sizes="32x32" />
     <link rel="apple-touch-icon" href="apple-touch-icon.png" />
-    <meta name="color-scheme" content="dark" />
+    <meta name="color-scheme" content="light" />
 
     <style>
-      /* Brand greens from src/constants/theme.ts. The page sits on a darkened
-         night video, so text is light. */
+      /* Brand greens from src/constants/theme.ts, on warm off-white paper. */
       :root {
         --brand-primary: #2e7d32;
         --brand-primary-light: #4ca84f;
-        --brand-tint: #c8e6c9;
-        --text: #ffffff;
-        --text-secondary: rgba(255, 255, 255, 0.8);
-        --bg: #000000;
-        --divider: rgba(255, 255, 255, 0.25);
+        --brand-tint: #2e7d32;
+        --text: #1c2a1d;
+        --text-secondary: #5b665c;
+        --bg: #fafaf6;
+        --divider: rgba(0, 0, 0, 0.12);
       }
 
       * {
@@ -47,27 +46,6 @@
       .rounded {
         font-family: ui-rounded, "SF Pro Rounded", -apple-system, system-ui,
           "Segoe UI", Roboto, sans-serif;
-      }
-
-      /* Background video under a dark wash, so the white type stays legible. */
-      .bg-video,
-      .bg-wash {
-        position: fixed;
-        inset: 0;
-        width: 100%;
-        height: 100%;
-        z-index: 0;
-      }
-      .bg-video {
-        object-fit: cover;
-      }
-      .bg-wash {
-        background: linear-gradient(
-          180deg,
-          rgba(0, 0, 0, 0.55) 0%,
-          rgba(0, 0, 0, 0.45) 50%,
-          rgba(0, 0, 0, 0.65) 100%
-        );
       }
 
       /* One screen: header, centred hero, footer pinned to the bottom. */
@@ -90,7 +68,7 @@
         font-size: 24px;
         font-weight: 700;
         letter-spacing: -0.5px;
-        color: var(--text);
+        color: var(--brand-primary);
         text-decoration: none;
       }
 
@@ -144,7 +122,7 @@
         line-height: 1;
         letter-spacing: -0.035em;
         font-weight: 700;
-        color: var(--text);
+        color: var(--brand-primary);
       }
 
       .tagline {
@@ -153,16 +131,14 @@
         font-size: clamp(17px, 2.2vw, 19px);
         line-height: 1.5;
         color: var(--text-secondary);
-        /* Keeps the small text readable over the brighter city lights. */
-        text-shadow: 0 1px 12px rgba(0, 0, 0, 0.7);
       }
 
       .beta-pill {
         margin: 48px 0 16px;
         padding: 6px 16px;
         border-radius: 999px;
-        background: rgba(76, 168, 79, 0.3);
-        color: var(--brand-tint);
+        background: rgba(46, 125, 50, 0.1);
+        color: var(--brand-primary);
         font-size: 14px;
         font-weight: 600;
       }
@@ -186,7 +162,7 @@
         padding: 0 20px 0 16px;
         background: #000000;
         color: #ffffff;
-        border: 1px solid #a6a6a6;
+        border: none;
         border-radius: 12px;
         text-decoration: none;
         transition: transform 0.05s ease, opacity 0.15s ease;
@@ -288,16 +264,16 @@
         padding: 0;
         border: none;
         border-radius: 20px;
-        background: #1c1c1e;
+        background: #ffffff;
         color: var(--text);
-        box-shadow: 0 24px 80px rgba(0, 0, 0, 0.6);
+        box-shadow: 0 24px 80px rgba(0, 0, 0, 0.25);
       }
       .sheet[open] {
         display: flex;
         flex-direction: column;
       }
       .sheet::backdrop {
-        background: rgba(0, 0, 0, 0.6);
+        background: rgba(0, 0, 0, 0.35);
         backdrop-filter: blur(6px);
         -webkit-backdrop-filter: blur(6px);
       }
@@ -319,7 +295,7 @@
         height: 32px;
         border: none;
         border-radius: 50%;
-        background: rgba(255, 255, 255, 0.12);
+        background: rgba(0, 0, 0, 0.06);
         color: var(--text);
         cursor: pointer;
         display: flex;
@@ -381,12 +357,6 @@
   </head>
 
   <body>
-    <!-- "Silhouettes of Two People Against a Cityscape" from Mixkit (Mixkit
-         Stock Video Free License: commercial use, no attribution needed).
-         The script below adds the src, so reduced-motion visitors get the poster only. -->
-    <video class="bg-video" muted loop playsinline aria-hidden="true" poster="media/city.jpg"></video>
-    <div class="bg-wash"></div>
-
     <div class="page">
       <header>
         <a class="wordmark rounded" href="/">Townbelt</a>
@@ -519,17 +489,6 @@
       document.getElementById("show-all").addEventListener("click", () => {
         root.dataset.platform = "desktop";
       });
-
-      // ---- Background video: skipped for reduced motion or data saver, so
-      // those visitors only download the poster frame.
-      const stillOnly =
-        matchMedia("(prefers-reduced-motion: reduce)").matches || navigator.connection?.saveData;
-      if (!stillOnly) {
-        const video = document.querySelector(".bg-video");
-        video.src = "media/city.mp4";
-        // Autoplay can be refused (e.g. iOS Low Power Mode); the poster stays.
-        video.play().catch(() => {});
-      }
 
       // ---- Privacy sheet: opens from the footer link or a #privacy URL ----
       const privacy = document.getElementById("privacy");

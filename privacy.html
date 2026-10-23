@@ -8,17 +8,17 @@
     <link rel="icon" href="favicon.svg" type="image/svg+xml" />
     <link rel="icon" href="favicon-32.png" type="image/png" sizes="32x32" />
     <link rel="apple-touch-icon" href="apple-touch-icon.png" />
-    <meta name="color-scheme" content="dark" />
+    <meta name="color-scheme" content="light" />
 
     <!-- Same text as the #privacy sheet in index.html and the in-app policy
          (src/app/settings/legal.tsx). Keep all three in sync. -->
     <style>
       :root {
-        --brand-tint: #c8e6c9;
-        --text: #ffffff;
-        --text-secondary: rgba(255, 255, 255, 0.8);
-        --bg: #000000;
-        --divider: rgba(255, 255, 255, 0.25);
+        --brand-tint: #2e7d32;
+        --text: #1c2a1d;
+        --text-secondary: #5b665c;
+        --bg: #fafaf6;
+        --divider: rgba(0, 0, 0, 0.12);
       }
 
       * {
@@ -54,6 +54,7 @@
           "Segoe UI", Roboto, sans-serif;
         font-size: 32px;
         font-weight: 700;
+        color: var(--brand-tint);
       }
 
       .sheet-body {
