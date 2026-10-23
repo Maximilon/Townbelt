@@ -227,6 +227,21 @@
         display: none;
       }
 
+      .android-note {
+        max-width: 360px;
+        margin: 14px 0 0;
+        font-size: 13px;
+        line-height: 1.45;
+        color: var(--text-secondary);
+      }
+      html[data-platform="ios"] .android-note {
+        display: none;
+      }
+      .android-note a {
+        color: var(--brand-tint);
+        text-underline-offset: 3px;
+      }
+
       .phone-switch {
         display: none;
         margin: 16px 0 0;
@@ -410,6 +425,8 @@
           </a>
         </div>
 
+        <p class="android-note">Android testers are added by hand. Not on the list yet? <a href="mailto:max@townbelt.com?subject=Please%20add%20me%20to%20the%20Townbelt%20Android%20beta&amp;body=Hi%20Max%2C%0A%0AI'd%20like%20to%20join%20the%20Townbelt%20Android%20beta.%20Please%20add%20me%20to%20the%20internal%20test.%0A%0AThe%20Google%20account%20I%20use%20for%20the%20Play%20Store%20on%20my%20phone%20is%3A%20%0A%0AThanks!">Request access</a></p>
+
         <p class="phone-switch">Different phone? <button type="button" id="show-all">Show both</button></p>
       </main>
 
@@ -473,9 +490,11 @@
       // ================================================================
       const LINKS = {
         ios: "https://testflight.apple.com/join/sPRS5PNz",
-        // Play "open testing" opt-in page for the townbelt.android package.
-        // Only works once an open (or public closed) testing track is live.
-        android: "https://play.google.com/apps/testing/townbelt.android",
+        // Play internal-testing opt-in page. Only Google accounts on the
+        // internal tester list can join; everyone else uses the
+        // "Request access" email below. Once closed testing is live, switch to
+        // https://play.google.com/apps/testing/townbelt.android
+        android: "https://play.google.com/apps/internaltest/4701724970808879137",
       };
 
       // The anon "publishable" key is safe in client code; reads go through
