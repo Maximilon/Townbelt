@@ -1,0 +1,330 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+    <title>How Townbelt works</title>
+    <meta name="description" content="Townbelt is an invite-only social app for you and your friends. Share what's happening in words and pictures, in real time. Now in beta on iPhone and Android." />
+
+    <meta property="og:title" content="How Townbelt works" />
+    <meta property="og:description" content="An invite-only social app for you and your friends. Share what's happening in words and pictures, in real time." />
+    <meta property="og:type" content="website" />
+    <meta property="og:url" content="https://townbelt.com/about.html" />
+    <meta name="theme-color" content="#fafaf6" />
+    <link rel="icon" href="favicon.svg" type="image/svg+xml" />
+    <link rel="icon" href="favicon-32.png" type="image/png" sizes="32x32" />
+    <link rel="apple-touch-icon" href="apple-touch-icon.png" />
+    <meta name="color-scheme" content="light" />
+
+    <style>
+      /* Same tokens as index.html (brand greens from src/constants/theme.ts). */
+      :root {
+        --brand-primary: #2e7d32;
+        --brand-tint: #2e7d32;
+        --brand-dim: rgba(46, 125, 50, 0.1);
+        --text: #1c2a1d;
+        --text-secondary: #5b665c;
+        --bg: #fafaf6;
+        --card: #ffffff;
+        --divider: rgba(0, 0, 0, 0.12);
+      }
+
+      * {
+        box-sizing: border-box;
+      }
+
+      body {
+        margin: 0;
+        font-family: -apple-system, BlinkMacSystemFont, "SF Pro Text", system-ui,
+          "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+        background: var(--bg);
+        color: var(--text);
+        -webkit-font-smoothing: antialiased;
+        text-rendering: optimizeLegibility;
+      }
+
+      .rounded {
+        font-family: ui-rounded, "SF Pro Rounded", -apple-system, system-ui,
+          "Segoe UI", Roboto, sans-serif;
+      }
+
+      .page {
+        max-width: 720px;
+        margin: 0 auto;
+        padding: 0 24px;
+      }
+
+      header {
+        padding: max(24px, env(safe-area-inset-top)) 0 0;
+      }
+
+      .wordmark {
+        font-size: 24px;
+        font-weight: 700;
+        letter-spacing: -0.5px;
+        color: var(--brand-primary);
+        text-decoration: none;
+      }
+
+      .hero {
+        padding: 72px 0 24px;
+        text-align: center;
+      }
+
+      .eyebrow {
+        display: inline-block;
+        margin: 0 0 20px;
+        padding: 6px 16px;
+        border-radius: 999px;
+        background: var(--brand-dim);
+        color: var(--brand-primary);
+        font-size: 14px;
+        font-weight: 600;
+      }
+
+      h1 {
+        margin: 0;
+        font-size: clamp(44px, 8vw, 72px);
+        line-height: 1.02;
+        letter-spacing: -0.035em;
+        font-weight: 700;
+        color: var(--brand-primary);
+      }
+
+      .lede {
+        margin: 28px auto 0;
+        max-width: 540px;
+        font-size: clamp(17px, 2.2vw, 19px);
+        line-height: 1.5;
+        color: var(--text-secondary);
+      }
+
+      section {
+        margin: 24px 0;
+        padding: 28px 28px 24px;
+        background: var(--card);
+        border: 1px solid var(--divider);
+        border-radius: 20px;
+      }
+
+      section h2 {
+        margin: 0 0 8px;
+        font-size: 24px;
+        letter-spacing: -0.4px;
+        color: var(--text);
+      }
+
+      section > p {
+        margin: 0 0 14px;
+        font-size: 16px;
+        line-height: 1.55;
+        color: var(--text-secondary);
+      }
+
+      section ul {
+        margin: 0;
+        padding: 0;
+        list-style: none;
+      }
+
+      section li {
+        position: relative;
+        margin: 0 0 10px;
+        padding-left: 22px;
+        font-size: 15px;
+        line-height: 1.5;
+        color: var(--text-secondary);
+      }
+
+      section li::before {
+        content: "";
+        position: absolute;
+        left: 4px;
+        top: 0.62em;
+        width: 7px;
+        height: 7px;
+        border-radius: 50%;
+        background: var(--brand-primary);
+      }
+
+      section li b {
+        color: var(--text);
+        font-weight: 600;
+      }
+
+      .beta {
+        text-align: center;
+      }
+
+      .beta p {
+        margin-left: auto;
+        margin-right: auto;
+        max-width: 420px;
+      }
+
+      .actions {
+        display: flex;
+        flex-wrap: wrap;
+        justify-content: center;
+        gap: 12px;
+        margin-top: 18px;
+      }
+
+      .button {
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        min-width: 200px;
+        height: 50px;
+        padding: 0 22px;
+        border-radius: 12px;
+        background: #000000;
+        color: #ffffff;
+        font-size: 16px;
+        font-weight: 600;
+        text-decoration: none;
+        transition: transform 0.05s ease, opacity 0.15s ease;
+      }
+      .button:hover {
+        opacity: 0.88;
+      }
+      .button:active {
+        transform: scale(0.98);
+      }
+
+      footer {
+        padding: 24px 0 max(24px, env(safe-area-inset-bottom));
+        text-align: center;
+        font-size: 13px;
+        color: var(--text-secondary);
+      }
+      footer a {
+        color: var(--text-secondary);
+        text-decoration: none;
+      }
+      footer a:hover {
+        color: var(--text);
+      }
+
+      @media (max-width: 720px) {
+        .page {
+          padding: 0 16px;
+        }
+        .hero {
+          padding: 48px 0 16px;
+        }
+        section {
+          padding: 22px 20px 18px;
+        }
+        .button {
+          width: 100%;
+        }
+      }
+    </style>
+  </head>
+
+  <body>
+    <div class="page">
+      <header>
+        <a class="wordmark rounded" href="/">Townbelt</a>
+      </header>
+
+      <div class="hero">
+        <div class="eyebrow">How Townbelt works</div>
+        <h1 class="rounded">Word of mouth<br />friendship.</h1>
+        <p class="lede">
+          Townbelt is an invite-only social app for you and your friends. Share what's
+          happening in words and pictures, in&nbsp;real&nbsp;time.
+        </p>
+      </div>
+
+      <main>
+        <section>
+          <h2 class="rounded">Join through someone you know</h2>
+          <p>Nobody joins Townbelt cold. A friend texts you an invite or you scan their QR code, so everyone here is known to someone.</p>
+          <ul>
+            <li><b>Text invites.</b> A friend sends you a link. Sign up with that phone number and their friend request is waiting for you.</li>
+            <li><b>QR codes.</b> Meet someone in person, scan their code with your camera, and you're friends straight away.</li>
+            <li><b>Find people you know.</b> If you allow it, Townbelt checks your contacts to show who's already here. The matching happens on your phone, and your contact list is never uploaded.</li>
+          </ul>
+        </section>
+
+        <section>
+          <h2 class="rounded">Friends introduce friends</h2>
+          <p>There's no search for strangers and no "people you may know." Your circle grows the way it does in real life.</p>
+          <ul>
+            <li><b>Introduce two friends.</b> Know two people who should meet? Introduce them with a note. They become friends once both say yes.</li>
+            <li><b>Ask for an introduction.</b> See someone you'd like to meet? Ask a mutual friend to introduce you. They decide whether to pass it on.</li>
+            <li><b>Nobody gets added without saying yes.</b></li>
+          </ul>
+        </section>
+
+        <section>
+          <h2 class="rounded">A feed built by your friends</h2>
+          <p>No algorithm decides what you see. Your feed is your friends' posts, newest first, so it only changes when your friends change.</p>
+          <ul>
+            <li><b>No suggested posts, no promoted content, no strangers.</b></li>
+            <li><b>Who you're friends with is your feed.</b> Add, mute or remove friends to shape it.</li>
+            <li><b>Hide any post</b> you don't want to see.</li>
+          </ul>
+        </section>
+
+        <section>
+          <h2 class="rounded">Share what's going on</h2>
+          <ul>
+            <li><b>Posts.</b> Words and up to three photos.</li>
+            <li><b>Choose your audience.</b> Share with all your friends, or pick exactly who sees each post.</li>
+            <li><b>Tag friends and places.</b> Tagged friends approve before they appear on your post.</li>
+            <li><b>Likes, comments and replies.</b></li>
+            <li><b>Reshare.</b> Pass a friend's public post on to your own friends.</li>
+          </ul>
+        </section>
+
+        <section>
+          <h2 class="rounded">Notifications you control</h2>
+          <p>Get alerts for comments, likes, tags and new friends, and turn any of them off in Settings. Friend requests and introductions always come through, because someone is waiting on your answer.</p>
+        </section>
+
+        <section>
+          <h2 class="rounded">Private by design</h2>
+          <ul>
+            <li>There's no public feed. Your posts reach only the people you choose.</li>
+            <li>Your phone number is never shown on your profile.</li>
+            <li>No ads, and your data is never sold.</li>
+            <li>Mute or remove friends, hide posts, and report anything that doesn't belong.</li>
+            <li>Delete your account at any time. Everything goes with it, permanently.</li>
+          </ul>
+        </section>
+
+        <section class="beta">
+          <h2 class="rounded">Now in beta</h2>
+          <p>Townbelt is in early testing on iPhone and Android.</p>
+          <div class="actions">
+            <a class="button" href="https://testflight.apple.com/join/sPRS5PNz">Join on TestFlight</a>
+            <a class="button" id="android-request" href="mailto:max@townbelt.com">Request Android access</a>
+          </div>
+        </section>
+      </main>
+
+      <footer>
+        <span id="copyright">© Townbelt</span> · <a href="/">Home</a> · <a href="privacy.html">Privacy</a>
+      </footer>
+    </div>
+
+    <script>
+      // Same access-request email as the Google Play badge on index.html.
+      // Keep the two in sync.
+      const ACCESS_BODY =
+        "Hi Max,\n\n" +
+        "I'd like to try the Townbelt Android beta.\n\n" +
+        "Google only lets testers download a beta app onto the Google account signed in to the Play Store on their phone, so here's mine:\n\n" +
+        "Google account: \n\n" +
+        "Thanks!";
+      document.getElementById("android-request").href =
+        "mailto:max@townbelt.com?subject=" + encodeURIComponent("Townbelt Android beta") +
+        "&body=" + encodeURIComponent(ACCESS_BODY);
+
+      document.getElementById("copyright").textContent = "© " + new Date().getFullYear() + " Townbelt";
+    </script>
+  </body>
+</html>
